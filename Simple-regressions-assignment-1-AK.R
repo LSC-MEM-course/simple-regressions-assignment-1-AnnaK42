@@ -103,6 +103,44 @@ summary(sim_results[,2:4])
 
 this_fit1 <- as.data.frame(this_fit)
 GatheredFit <- gather(this_fit1)
-
+ggplot(data = NULL, aes(y = GatheredFit, x = 1:10)) + geom_point()
+plot(GatherFit)
     
 
+# Dummy coding
+
+mysleep <- sleep 
+levels(mysleep$group) <- c("pre", "post") 
+head(mysleep)
+summary(mysleep)
+summary(lm(extra ~ group, data = mysleep))
+mysleep %>% group_by(group) %>% summarize(mean = mean(extra))
+mysleep <- mysleep %>% mutate(group.num = as.numeric(group) - 1)
+summary(lm(extra ~ group.num, mysleep))
+
+# Recall from our previous discussion of variable scaling that centering a variable means transforming it such that the mean is zero (or extremely close to zero, such as when we apply R’s scale() function). Now, think about how this relates to the interpretation of our linear model coeﬃcients. How do we interpret the intercept? 
+
+# the intercept is the predicted value of y when all predictors have a value of zero. This is just simple arithmetic because when a value of a predictor is zero, then it adds nothing to the predicted value of y because a slope parameter times zero is obviously always zero. So if all predictors are zero, the only terms left in our equation are the intercept and error terms. Now, think about the impact of centering a categorical predictor like group. In our previous model, the intercept corresponded to the mean value of the “pre” condition. What does the intercept correspond to when we center the group variable? 
+
+mysleep_norm <- as.data.frame(mysleep)
+mysleep_norm <- mysleep_norm %>% mutate(extra = rnorm(extra, mean = 0))
+summary(mysleep_norm)
+head(mysleep_norm)
+mysleep_norm <- mysleep_norm %>% mutate(rnorm(group.c, mean = 0)) #creates 2 levels?
+mysleep_norm$group.c <- as.numeric(mysleep$group) - 1.5 
+xtabs(~ group + group.c, mysleep_norm) #cross tabulate function, contingency table
+#creates 2 levels of 0.5 and -0.5???
+
+#2.Fit a model with the new group.c predictor as the only predictor of extra. How is it diﬀerent and similar to the original model with group or group.num?
+
+
+summary(lm(mysleep$extra ~ mysleep_norm$group.c, mysleep))
+
+# 3. What does the new intercept correspond to? Calculate that value with another method to demonstrate this interpretation of the coeﬃcient.
+
+
+
+#Factor Coding
+
+contrasts(iris$Species)
+                                        
